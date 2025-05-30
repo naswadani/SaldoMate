@@ -28,9 +28,8 @@ struct AddTransactionView: View {
                 transactionNameField
                 transactionAmountField
                 transactionDateSection
-                transactionCategorySection
                 transactionTypeSection
-                transactionNoteField
+                transactionCategorySection
                 inputButton
             }
         }
@@ -139,7 +138,7 @@ struct AddTransactionView: View {
                             Spacer()
                             Image(systemName: "chevron.right.circle.fill")
                                 .foregroundStyle(.secondary)
-                                .font(.title)
+                                .font(.title2)
                         }
                     }
                 } else {
@@ -157,7 +156,7 @@ struct AddTransactionView: View {
                 }
             }
             .padding()
-            .frame(height: 60) // <- Samakan tinggi
+            .frame(height: 60)
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 10)
@@ -189,14 +188,6 @@ struct AddTransactionView: View {
                     .fill(Color.accent.opacity(0.2))
             )
         }
-    }
-    
-    var transactionNoteField: some View {
-        CustomTextFieldView(
-            title: "Transaction Note",
-            hint: "Enter Note (Optional)",
-            textInput: $viewModel.addTransactionRequest.note
-        )
     }
     
     var inputButton: some View {

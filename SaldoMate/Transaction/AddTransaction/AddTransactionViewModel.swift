@@ -34,7 +34,6 @@ class AddTransactionViewModel: ObservableObject {
             amount: 0,
             category: "",
             date: Date(),
-            note: "",
             type: .income
         )
         validateForm()

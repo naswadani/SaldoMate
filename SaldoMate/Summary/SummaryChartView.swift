@@ -9,26 +9,17 @@ import SwiftUI
 import Charts
 
 struct SummaryChartView: View {
-    let byCategory: [PostCount] = [
-      .init(category: "Xcode", count: 79),
-      .init(category: "Swift", count: 73),
-      .init(category: "SwiftUI", count: 58),
-      .init(category: "WWDC", count: 15),
-      .init(category: "SwiftData", count: 9),
-      .init(category: "C++", count: 9),
-      .init(category: "Python", count: 9),
-      .init(category: "Golang", count: 9)
-    ]
+    var chartData: [(categoryName: String, totalAmount: Double)] = []
     
     var body: some View {
-        Chart(byCategory, id: \.category) { item in
+        Chart(chartData, id: \.categoryName) { item in
             SectorMark(
-                angle: .value("Count", item.count),
+                angle: .value("Count", item.totalAmount),
                 innerRadius: .ratio(0.6),
                 angularInset: 2
             )
             .cornerRadius(5)
-            .foregroundStyle(by: .value("Category", item.category))
+            .foregroundStyle(by: .value("Category", item.categoryName))
         }
         .scaledToFit()
         .chartLegend(alignment: .center, spacing: 16)
@@ -44,8 +35,4 @@ struct SummaryChartView: View {
         }
         .padding()
     }
-}
-
-#Preview {
-    SummaryChartView()
 }

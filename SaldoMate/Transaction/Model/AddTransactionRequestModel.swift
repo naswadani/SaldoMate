@@ -12,7 +12,6 @@ struct AddTransactionRequestModel {
     var amount: Double
     var category: String
     var date: Date
-    var note: String
     var type: TransactionType
     
     var formattedDate: String {

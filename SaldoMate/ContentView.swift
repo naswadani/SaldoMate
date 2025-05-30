@@ -16,7 +16,7 @@ struct ContentView: View {
                 .tabItem {
                     Label("Transactions", systemImage: "arrow.trianglehead.2.counterclockwise")
                 }
-            SummaryView()
+            SummaryView(repository: SummaryRepository(context: context))
                 .tabItem {
                     Label("Summary", systemImage: "chart.pie")
                 }

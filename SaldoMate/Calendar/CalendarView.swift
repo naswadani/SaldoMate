@@ -51,18 +51,11 @@ struct CalendarView: View {
                             .padding()
                             .foregroundStyle(Color.accent.opacity(0.3))
                     )
-                    let dataToShow = selectedSection == 0 ? incomeData : expenseData
-                    ForEach(dataToShow, id: \.0) { item in
-                        TransactionListItemView(
-                            titleTransaction: item.0,
-                            dateTransaction: item.1,
-                            amountTransaction: item.2,
-                            colorTransaction: item.3,
-                            categoryTransaction: item.4,
-                            needPadding: false
-                        )
-                    }
-                    .padding(.horizontal)
+//                    let dataToShow = selectedSection == 0 ? incomeData : expenseData
+//                    ForEach(dataToShow, id: \.0) { item in
+//                        TransactionListItemView(titleTransaction: item.1, dateTransaction: item.2, amountTransaction: item.2, colorTransaction: item.3, categoryTransaction: item.1 , needPadding: false, hadNote: item.4)
+//                    }
+//                    .padding(.horizontal)
                 }
             }
             .navigationTitle("Calendar")

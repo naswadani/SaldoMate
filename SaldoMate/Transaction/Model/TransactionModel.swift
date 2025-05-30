@@ -14,7 +14,6 @@ struct TransactionModel: Identifiable {
     let category: String
     let date: Date
     let type: TransactionType
-    let note: String?
     
     var formattedDate: String {
         let formatter = DateFormatter()

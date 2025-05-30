@@ -29,7 +29,6 @@ class TransactionRepository: TransactionRepositoryProtocol {
         transaction.category = transactionRequest.category
         transaction.date = transactionRequest.date
         transaction.type = transactionRequest.type.rawValue
-        transaction.note = transactionRequest.note
         transaction.name = transactionRequest.name
         transaction.id = UUID()
         
@@ -58,7 +57,6 @@ class TransactionRepository: TransactionRepositoryProtocol {
                     category: data.category,
                     date: data.date,
                     type: type,
-                    note: data.note
                 )
             }
         } catch {

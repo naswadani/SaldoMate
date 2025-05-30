@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CategoryModel: Identifiable, Equatable {
+struct CategoryModel: Identifiable, Equatable, Hashable{
     var id: UUID
     var type: TransactionType
     var category: String

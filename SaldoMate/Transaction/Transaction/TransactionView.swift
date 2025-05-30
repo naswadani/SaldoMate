@@ -20,7 +20,7 @@ struct TransactionView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
+            ZStack(alignment: .center) {
                 VStack {
                     Picker("Select Section", selection: $selectedSection) {
                         ForEach(TransactionType.allCases) { type in
@@ -40,6 +40,7 @@ struct TransactionView: View {
                             .opacity(selectedSection == .expense ? 1 : 0)
                             .accessibilityHidden(selectedSection != .expense)
                     }
+                    
                 }
                 
                 VStack {
@@ -80,12 +81,7 @@ struct TransactionView: View {
                 Section(header: Text(month)) {
                     ForEach(viewModel.groupedIncomeTransactionData[month] ?? []) { item in
                         TransactionListItemView(
-                            titleTransaction: item.name,
-                            dateTransaction: item.formattedDate,
-                            amountTransaction: item.formattedAmount,
-                            colorTransaction: Color.green,
-                            categoryTransaction: item.category,
-                            needPadding: true
+                            data: item, colorTransaction: .green
                         )
                         .listRowInsets(EdgeInsets())
                         .swipeActions {
@@ -108,12 +104,7 @@ struct TransactionView: View {
                 Section(header: Text(month)) {
                     ForEach(viewModel.groupedExpenseTransactionData[month] ?? []) { item in
                         TransactionListItemView(
-                            titleTransaction: item.name,
-                            dateTransaction: item.formattedDate,
-                            amountTransaction: item.formattedAmount,
-                            colorTransaction: Color.green,
-                            categoryTransaction: item.category,
-                            needPadding: true
+                            data: item, colorTransaction: .red
                         )
                         .listRowInsets(EdgeInsets())
                         .swipeActions {
