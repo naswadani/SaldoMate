@@ -20,10 +20,6 @@ struct ContentView: View {
                 .tabItem {
                     Label("Summary", systemImage: "chart.pie")
                 }
-            CalendarView()
-                .tabItem {
-                    Label("Calendar", systemImage: "calendar")
-                }
             SettingsView(repository: CategoryListRepository(context: context))
                 .tabItem {
                     Label("Preferences", systemImage: "gearshape")

@@ -6,20 +6,13 @@
 //
 
 import Foundation
-
-//
-//  SummaryViewModel.swift
-//  SaldoMate
-//
-//  Created by naswakhansa on 30/05/25.
-//
-
-import Foundation
+import SwiftUI
 
 final class SummaryViewModel: ObservableObject {
     private let repository: SummaryRepositoryProtocol
     private let calendar = Calendar.current
     
+    @Published var selectedCategory: String? = nil
     @Published var monthlyIncomeTransactions: [TransactionModel] = []
     @Published var monthlyExpenseTransactions: [TransactionModel] = []
     
@@ -28,19 +21,15 @@ final class SummaryViewModel: ObservableObject {
     @Published var incomeStateView: SummaryStateView = .idle
     @Published var expenseStateView: SummaryStateView = .idle
     
-    @Published var totalAmount: [SummaryModel] = []
+    @Published var chartData: [SummaryModel] = []
     @Published var incomeCategories: [CategoryModel] = []
     @Published var expenseCategories: [CategoryModel] = []
+        
     
-    @Published var chartData: [(categoryName: String, totalAmount: Double)] = []
-    
-    var totalIncome: Double {
-        monthlyIncomeTransactions.reduce(0) { $0 + $1.amount }
+    var totalAmount: Double {
+        chartData.reduce(0) { $0 + $1.totalAmount }
     }
     
-    var totalExpense: Double {
-        monthlyExpenseTransactions.reduce(0) { $0 + $1.amount }
-    }
     
     init(repository: SummaryRepositoryProtocol) {
         self.repository = repository
@@ -63,10 +52,6 @@ final class SummaryViewModel: ObservableObject {
     func fetchInitialData() {
         selectedSection = .income
         loadData()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.loadChartData(for: .income)
-        }
     }
     
     func loadData() {
@@ -151,12 +136,12 @@ final class SummaryViewModel: ObservableObject {
     func updateSummary() {
         switch selectedSection {
         case .income:
-            totalAmount = calculateMonthlySummaryPerCategory(
+            chartData = calculateMonthlySummaryPerCategory(
                 from: monthlyIncomeTransactions,
                 categories: incomeCategories
             )
         case .expense:
-            totalAmount = calculateMonthlySummaryPerCategory(
+            chartData = calculateMonthlySummaryPerCategory(
                 from: monthlyExpenseTransactions,
                 categories: expenseCategories
             )
@@ -194,16 +179,45 @@ final class SummaryViewModel: ObservableObject {
         }
     }
     
-    func loadChartData(for type: TransactionType) {
-        let currentMonth = calendar.component(.month, from: Date())
-        let currentYear = calendar.component(.year, from: Date())
+    func selectedItem() -> SummaryModel? {
+        guard let selected = selectedCategory else { return nil }
+        return chartData.first { $0.category.category == selected }
+    }
+    
+    func handleTap(at location: CGPoint, chartSize: CGSize) {
+        let center = CGPoint(x: chartSize.width / 2, y: chartSize.height / 2)
+        let dx = location.x - center.x
+        let dy = location.y - center.y
         
-        chartData = getChartData(
-            from: type == .income ? monthlyIncomeTransactions : monthlyExpenseTransactions,
-            categories: type == .income ? incomeCategories : expenseCategories,
-            month: currentMonth,
-            year: currentYear,
-            type: type
-        )
+        let distance = sqrt(dx * dx + dy * dy)
+        let outerRadius: CGFloat = 120
+        let innerRadius: CGFloat = outerRadius * 0.6
+        
+        guard distance >= innerRadius && distance <= outerRadius else {
+            withAnimation {
+                selectedCategory = nil
+            }
+            return
+        }
+        
+        var angle = atan2(dx, -dy) * 180 / .pi
+        if angle < 0 { angle += 360 }
+        
+        var cumulativeAngle: Double = 0
+        for item in chartData {
+            let angleRange = (item.totalAmount / totalAmount) * 360
+            let endAngle = cumulativeAngle + angleRange
+            if angle >= cumulativeAngle && angle < endAngle {
+                withAnimation {
+                    if selectedCategory == item.category.category {
+                        selectedCategory = nil
+                    } else {
+                        selectedCategory = item.category.category
+                    }
+                }
+                return
+            }
+            cumulativeAngle += angleRange
+        }
     }
 }

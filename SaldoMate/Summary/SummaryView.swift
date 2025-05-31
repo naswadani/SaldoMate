@@ -20,8 +20,17 @@ struct SummaryView: View {
         NavigationStack {
             ScrollView {
                 LazyVStack {
-                    SummaryChartView(chartData: viewModel.chartData)
-                    
+                    SummaryChartView(
+                        chartData: viewModel.chartData,
+                        selectedCategory: viewModel.selectedCategory,
+                        handleTap: { location,size in
+                            viewModel.handleTap(at: location, chartSize: size)
+                        },
+                        selectedItem: {
+                            viewModel.selectedItem()
+                        },
+                        totalIncome: viewModel.totalAmount
+                    )
                     Picker("Select Section", selection: $viewModel.selectedSection) {
                         Text("Income").tag(TransactionType.income)
                         Text("Expense").tag(TransactionType.expense)
@@ -31,7 +40,7 @@ struct SummaryView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .tint(.secondary)
                     .onChange(of: viewModel.selectedSection) {
-                        viewModel.loadChartData(for: viewModel.selectedSection)
+                        viewModel.updateSummary()
                     }
                     .background(
                         RoundedRectangle(cornerRadius: 10)
