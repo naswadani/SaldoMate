@@ -9,11 +9,12 @@ import SwiftUI
 import Charts
 
 struct SummaryChartView: View {
+    var typeTransaction: TransactionType
     var chartData: [SummaryModel]
     var selectedCategory: String?
     var handleTap: (_ location: CGPoint, _ chartSize: CGSize) -> Void
     var selectedItem: () -> SummaryModel?
-    var totalIncome: Double
+    var totalAmount: Double
     
     var body: some View {
         VStack(spacing: 20) {
@@ -21,12 +22,21 @@ struct SummaryChartView: View {
                 Chart(chartData, id: \.id) { item in
                     SectorMark(
                         angle: .value("Total", item.totalAmount),
-                        innerRadius: .ratio(0.6),
+                        innerRadius: .ratio(0.7),
                         angularInset: 2
                     )
                     .cornerRadius(5)
                     .foregroundStyle(by: .value("Category", item.category.category))
-                    .opacity(selectedCategory == nil || selectedCategory == item.category.category ? 1 : 0.3)
+                    .opacity({
+                        if selectedCategory == nil {
+                            return 1
+                        } else if selectedCategory == item.category.category {
+                            return 1
+                        } else {
+                            return 0.3
+                        }
+                    }())
+
                 }
                 .frame(height: 300)
                 
@@ -43,17 +53,15 @@ struct SummaryChartView: View {
                     if let selected = selectedCategory,
                        let item = selectedItem() {
                         Text(selected)
-                            .font(.headline)
+                            .font(.subheadline)
                         Text("Rp\(item.totalAmount, specifier: "%.0f")")
                             .font(.subheadline)
-                            .fontWeight(.bold)
                             .foregroundColor(.blue)
                     } else {
-                        Text("Total Income")
+                        Text("Total \(typeTransaction.rawValue) ")
                             .font(.subheadline)
-                        Text("Rp\(totalIncome, specifier: "%.0f")")
+                        Text("Rp\(totalAmount, specifier: "%.0f")")
                             .font(.subheadline)
-                            .fontWeight(.bold)
                             .foregroundColor(.blue)
                     }
                 }
@@ -61,7 +69,6 @@ struct SummaryChartView: View {
                 .background(
                     Circle()
                         .fill(Color(.systemBackground))
-                        .shadow(radius: 4)
                 )
                 .allowsHitTesting(false)
             }

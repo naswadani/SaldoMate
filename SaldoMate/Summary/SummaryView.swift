@@ -21,6 +21,7 @@ struct SummaryView: View {
             ScrollView {
                 LazyVStack {
                     SummaryChartView(
+                        typeTransaction: viewModel.selectedSection,
                         chartData: viewModel.chartData,
                         selectedCategory: viewModel.selectedCategory,
                         handleTap: { location,size in
@@ -29,7 +30,7 @@ struct SummaryView: View {
                         selectedItem: {
                             viewModel.selectedItem()
                         },
-                        totalIncome: viewModel.totalAmount
+                        totalAmount: viewModel.totalAmount
                     )
                     Picker("Select Section", selection: $viewModel.selectedSection) {
                         Text("Income").tag(TransactionType.income)
@@ -48,20 +49,13 @@ struct SummaryView: View {
                             .foregroundStyle(Color.accent.opacity(0.3))
                     )
                     
-                    //                    let dataToShow = selectedSection == 0 ? incomeData : expenseData
-                    //
-                    //                    ForEach(dataToShow, id: \.0) { item in
-                    //                        TransactionListItemView(
-                    //                            titleTransaction: item.0,
-                    //                            dateTransaction: item.1,
-                    //                            amountTransaction: item.2,
-                    //                            colorTransaction: item.3,
-                    //                            categoryTransaction: item.4,
-                    //                            needPadding: false,
-                    //                            hadNote: item.4
-                    //                        )
-                    //                    }
-                    //                    .padding(.horizontal)
+                    ForEach(viewModel.monthlyTransactions) { item in
+                        TransactionListItemView(
+                            data: item,
+                            colorTransaction: viewModel.selectedSection == .income ? .incomeLabel : .expenseLabel
+                        )
+                    }
+                    .padding(.horizontal, 10)
                 }
             }
             .onAppear {

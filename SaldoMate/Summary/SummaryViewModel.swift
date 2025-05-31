@@ -30,7 +30,6 @@ final class SummaryViewModel: ObservableObject {
         chartData.reduce(0) { $0 + $1.totalAmount }
     }
     
-    
     init(repository: SummaryRepositoryProtocol) {
         self.repository = repository
         
@@ -47,6 +46,10 @@ final class SummaryViewModel: ObservableObject {
         ) { [weak self] _ in
             self?.fetchInitialData()
         }
+    }
+    
+    var monthlyTransactions: [TransactionModel] {
+        selectedSection == .income ? monthlyIncomeTransactions : monthlyExpenseTransactions
     }
     
     func fetchInitialData() {
