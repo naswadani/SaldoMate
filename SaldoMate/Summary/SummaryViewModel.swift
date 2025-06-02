@@ -12,7 +12,11 @@ final class SummaryViewModel: ObservableObject {
     private let repository: SummaryRepositoryProtocol
     private let calendar = Calendar.current
     
-    @Published var selectedCategory: String? = nil
+    @Published var selectedCategories: [TransactionType: String?] = [
+        .income: nil,
+        .expense: nil
+    ]
+    
     @Published var monthlyIncomeTransactions: [TransactionModel] = []
     @Published var monthlyExpenseTransactions: [TransactionModel] = []
     
@@ -24,6 +28,11 @@ final class SummaryViewModel: ObservableObject {
     @Published var chartData: [SummaryModel] = []
     @Published var incomeCategories: [CategoryModel] = []
     @Published var expenseCategories: [CategoryModel] = []
+    
+    var selectedCategory: String? {
+        selectedCategories[selectedSection] ?? nil
+    }
+
         
     
     var totalAmount: Double {
@@ -198,7 +207,7 @@ final class SummaryViewModel: ObservableObject {
         
         guard distance >= innerRadius && distance <= outerRadius else {
             withAnimation {
-                selectedCategory = nil
+                selectedCategories[selectedSection] = nil
             }
             return
         }
@@ -212,10 +221,10 @@ final class SummaryViewModel: ObservableObject {
             let endAngle = cumulativeAngle + angleRange
             if angle >= cumulativeAngle && angle < endAngle {
                 withAnimation {
-                    if selectedCategory == item.category.category {
-                        selectedCategory = nil
+                    if selectedCategories[selectedSection] == item.category.category {
+                        selectedCategories[selectedSection] = nil
                     } else {
-                        selectedCategory = item.category.category
+                        selectedCategories[selectedSection] = item.category.category
                     }
                 }
                 return

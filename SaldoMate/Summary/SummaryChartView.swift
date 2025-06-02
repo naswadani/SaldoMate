@@ -28,15 +28,16 @@ struct SummaryChartView: View {
                     .cornerRadius(5)
                     .foregroundStyle(by: .value("Category", item.category.category))
                     .opacity({
-                        if selectedCategory == nil {
+                        let selected = selectedCategory
+                        if selected == nil {
                             return 1
-                        } else if selectedCategory == item.category.category {
+                        } else if selected == item.category.category {
                             return 1
                         } else {
                             return 0.3
                         }
                     }())
-
+                    
                 }
                 .frame(height: 300)
                 
@@ -48,7 +49,7 @@ struct SummaryChartView: View {
                         handleTap(location, CGSize(width: 300, height: 300))
                     }
                     .allowsHitTesting(true)
-
+                
                 VStack(alignment: .center,spacing: 4) {
                     if let selected = selectedCategory,
                        let item = selectedItem() {
